@@ -7,3 +7,5 @@
 - Gotcha from demo: LLM responses can reintroduce or inflect PII (for example "Pani Anno"), so always redact both prompt and response immediately before storage.
 - For Langfuse examples, keep a dry-run path so the demo works without a self-hosted Langfuse instance or credentials.
 - Product direction update: prioritize drop-in Langfuse `mask=make_mask()` integration over server/gateway demos; the server remains secondary.
+- HTML playground is intentionally served by FastAPI at `/` and `/playground` so it uses the same `/redact` backend as the prototype.
+- Local Bards AI backend should stay pure ONNX Runtime + Hugging Face Hub + tokenizers; avoid `optimum`, `torch`, and `torchvision` in runtime.

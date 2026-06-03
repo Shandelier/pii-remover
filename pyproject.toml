@@ -17,8 +17,9 @@ dependencies = [
 
 [project.optional-dependencies]
 local = [
-  "transformers>=4.44.0",
-  "optimum[onnxruntime]>=1.21.0",
+  "huggingface-hub>=0.24.0",
+  "onnxruntime>=1.18.0",
+  "tokenizers>=0.19.0",
 ]
 test = [
   "pytest>=8.2.0",

@@ -16,3 +16,12 @@ def test_make_mask_reads_backend_env(monkeypatch) -> None:
     mask = make_mask()
 
     assert mask("PESEL 85010112345") == "PESEL [REDACTED]"
+
+
+def test_make_mask_reads_excluded_labels_env(monkeypatch) -> None:
+    monkeypatch.setenv("PII_DETECTOR_BACKEND", "regex")
+    monkeypatch.setenv("PII_EXCLUDE_LABELS", "EMAIL")
+
+    mask = make_mask()
+
+    assert mask("Email: jan.kowalski@example.com") == "Email: jan.kowalski@example.com"

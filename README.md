@@ -34,6 +34,7 @@ langfuse = Langfuse(mask=make_mask(backend="local"))
 ```
 
 The default prototype backend is regex-based so the examples run immediately. `backend="local"` is wired for `bardsai/eu-pii-anonimization-multilang`.
+The local backend uses ONNX Runtime directly, with regex checks layered in for structured values like emails, cards, PESEL, and phone numbers.
 
 ## Langfuse Demo
 
@@ -68,6 +69,21 @@ The FastAPI server is a secondary path for teams that want a standalone gateway.
 ```bash
 python3 -m pip install -e .
 python3 -m uvicorn pii_redactor.server.app:app --reload
+```
+
+Open the local playground:
+
+```text
+http://127.0.0.1:8000
+```
+
+By default this uses the lightweight `regex` fallback so the prototype starts instantly. The page shows which detector is active.
+
+Use the Bards AI detector in the playground:
+
+```bash
+python3 -m pip install -e '.[local]'
+PII_DETECTOR_BACKEND=local python3 -m uvicorn pii_redactor.server.app:app --reload
 ```
 
 ```bash
