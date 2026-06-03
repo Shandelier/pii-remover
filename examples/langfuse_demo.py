@@ -51,7 +51,7 @@ def _send_to_langfuse(events: list[dict[str, Any]]) -> None:
         public_key=os.getenv("LANGFUSE_PUBLIC_KEY"),
         secret_key=os.getenv("LANGFUSE_SECRET_KEY"),
         base_url=os.getenv("LANGFUSE_BASE_URL"),
-        mask=make_mask(backend=os.getenv("PII_DETECTOR_BACKEND", "regex")),
+        mask=make_mask(),
     )
 
     for event in events:
@@ -68,8 +68,16 @@ def _send_to_langfuse(events: list[dict[str, Any]]) -> None:
 
 
 def _print_dry_run(events: list[dict[str, Any]]) -> None:
-    mask = make_mask(backend=os.getenv("PII_DETECTOR_BACKEND", "regex"))
-    masked_events = [mask(event) for event in events]
+    mask = make_mask()
+    masked_events = [
+        {
+            **event,
+            "input": mask(event["input"]),
+            "output": mask(event["output"]),
+            "metadata": mask(event["metadata"]),
+        }
+        for event in events
+    ]
     print(json.dumps(masked_events, ensure_ascii=False, indent=2))
     print("\nDry run only. Set LANGFUSE_PUBLIC_KEY and LANGFUSE_SECRET_KEY to send these masked events to Langfuse.")
 

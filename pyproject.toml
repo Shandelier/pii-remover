@@ -29,6 +29,7 @@ langfuse = [
 
 [project.scripts]
 pii-redactor-demo = "examples.demo:main"
+pii-redactor-langfuse-demo = "examples.langfuse_demo:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pii_redactor"]

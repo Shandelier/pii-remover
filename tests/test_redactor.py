@@ -1,18 +1,20 @@
 from pii_redactor.core.redactor import Redactor
 
 
-def test_redacts_nested_json() -> None:
+def test_redacts_langfuse_shaped_trace_payload() -> None:
     redactor = Redactor()
 
     result = redactor.redact(
         {
             "input": "Jan Kowalski ma email jan.kowalski@example.com i PESEL 85010112345.",
-            "metadata": {"phone": "+48 501 222 333"},
+            "output": "Odpowiedź dla Jana Kowalskiego powinna być zapisana bez danych kontaktowych.",
+            "metadata": {"customer_contact": "+48 501 222 333"},
         }
     )
 
     assert result["input"] == "[REDACTED] ma email [REDACTED] i PESEL [REDACTED]."
-    assert result["metadata"]["phone"] == "[REDACTED]"
+    assert result["output"] == "Odpowiedź dla [REDACTED] powinna być zapisana bez danych kontaktowych."
+    assert result["metadata"]["customer_contact"] == "[REDACTED]"
 
 
 def test_store_receives_redacted_values_only(tmp_path) -> None:

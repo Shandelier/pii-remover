@@ -1,97 +1,49 @@
 # pii-redactor
 
-Self-hosted prototype for adding PII redaction before LLM observability storage.
+Drop-in PII redaction for teams that already use Langfuse.
 
-The demo flow:
+The main path is client-side Langfuse masking: data is redacted in the user's app before Langfuse receives traced `input`, `output`, and `metadata`.
 
-1. User sends a prompt containing PII.
-2. The server receives it.
-3. The prompt is sent to OpenRouter if `OPENROUTER_API_KEY` is set, otherwise to a deterministic demo LLM.
-4. The prompt and LLM response are redacted.
-5. Only redacted prompt/response are written to `data/*.jsonl`.
+## Add To Existing Langfuse Code
 
-## Run the demo
+Before:
 
-```bash
-python3 examples/demo.py
+```python
+from langfuse import Langfuse
+
+langfuse = Langfuse()
 ```
 
-The demo runs three PII-heavy prompts and writes only redacted traces to:
+After:
 
-```text
-data/demo_redacted_logs.jsonl
+```python
+from langfuse import Langfuse
+from pii_redactor.integrations.langfuse import make_mask
+
+langfuse = Langfuse(mask=make_mask())
 ```
 
-## Run the server
-
-```bash
-python3 -m pip install -e .
-python3 -m uvicorn pii_redactor.server.app:app --reload
-```
-
-Then send a prompt:
-
-```bash
-curl -X POST http://127.0.0.1:8000/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"prompt":"Jan Kowalski, email jan.kowalski@example.com, PESEL 85010112345. Odpowiedz krótko."}'
-```
-
-Inspect stored redacted traces:
-
-```bash
-curl http://127.0.0.1:8000/traces
-```
-
-## Optional OpenRouter
-
-```bash
-export OPENROUTER_API_KEY=...
-export OPENROUTER_MODEL=openai/gpt-4o-mini
-python3 examples/demo.py
-```
-
-Without a key, the prototype uses a local deterministic demo provider so the flow is still testable.
-
-Force local demo mode even when an OpenRouter key exists:
-
-```bash
-PII_LLM_PROVIDER=demo python3 examples/demo.py
-```
-
-## Optional Bards AI model backend
-
-The default demo backend is regex-based so it runs immediately. The production-shaped local backend is wired for:
-
-```text
-bardsai/eu-pii-anonimization-multilang
-```
-
-Install model dependencies and switch backend:
+For the Bards AI local model backend:
 
 ```bash
 python3 -m pip install -e '.[local]'
-export PII_DETECTOR_BACKEND=local
-python3 examples/demo.py
 ```
 
-## Langfuse-style hook
-
 ```python
-from pii_redactor.integrations.langfuse import make_mask
-
 langfuse = Langfuse(mask=make_mask(backend="local"))
 ```
 
-## Langfuse SDK demo
+The default prototype backend is regex-based so the examples run immediately. `backend="local"` is wired for `bardsai/eu-pii-anonimization-multilang`.
 
-Dry-run the same masking function against Langfuse-shaped generation events:
+## Langfuse Demo
+
+Dry-run Langfuse-shaped generation events without sending anything:
 
 ```bash
 PII_LLM_PROVIDER=demo python3 examples/langfuse_demo.py
 ```
 
-Send to Langfuse:
+Send masked events to Langfuse:
 
 ```bash
 python3 -m pip install -e '.[langfuse]'
@@ -101,4 +53,45 @@ export LANGFUSE_BASE_URL=http://localhost:3000
 PII_LLM_PROVIDER=demo python3 examples/langfuse_demo.py
 ```
 
-The important bit is still the one-liner: `Langfuse(mask=make_mask(...))`. Langfuse applies it to traced input, output, and metadata before export.
+The demo uses three PII-heavy prompts and masks the traced prompt, LLM response, and metadata before Langfuse export.
+
+## Minimal Existing-App Example
+
+See [examples/langfuse_existing_app.py](examples/langfuse_existing_app.py).
+
+The whole integration is intentionally just the Langfuse `mask` callback. Langfuse documents that this callback is applied to observation `input`, `output`, and `metadata` before export: [Langfuse masking docs](https://langfuse.com/docs/observability/features/masking).
+
+## Optional Server Prototype
+
+The FastAPI server is a secondary path for teams that want a standalone gateway.
+
+```bash
+python3 -m pip install -e .
+python3 -m uvicorn pii_redactor.server.app:app --reload
+```
+
+```bash
+curl -X POST http://127.0.0.1:8000/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"Jan Kowalski, email jan.kowalski@example.com, PESEL 85010112345. Odpowiedz krótko."}'
+```
+
+Stored traces are written only after redaction:
+
+```bash
+curl http://127.0.0.1:8000/traces
+```
+
+## Local Demo Store
+
+```bash
+PII_LLM_PROVIDER=demo python3 examples/demo.py
+```
+
+This writes redacted traces to:
+
+```text
+data/demo_redacted_logs.jsonl
+```
+
+If `OPENROUTER_API_KEY` is set, demos use OpenRouter. Force local demo mode with `PII_LLM_PROVIDER=demo`.

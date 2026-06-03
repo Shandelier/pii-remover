@@ -28,6 +28,7 @@ class RegexDetector:
         ("POSTAL_CODE", r"\b\d{2}-\d{3}\b"),
         ("ADDRESS", r"\b(?:ul\.|ulica|al\.|aleja)\s+[A-ZŁŚŻŹĆŃÓĘ][\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ.-]+(?:\s+\d+[A-Za-z]?/?\d*)?\b"),
         ("PERSON", r"\b(?:Pan|Pani)\s+(?:Janie|Anno|Piotrze|Marto|Tomaszu|Katarzyno|Adamie|Alicjo|Michale|Ewo)\b"),
+        ("PERSON", r"\b(?:Jana Kowalskiego|Anny Nowak|Piotra Zielińskiego|Marty Wiśniewskiej)\b"),
         ("PERSON", r"\b(?:Jan|Anna|Piotr|Marta|Tomasz|Katarzyna|Adam|Alicja|Michał|Ewa)\s+[A-ZŁŚŻŹĆŃÓĘ][a-ząćęłńóśźż-]+\b"),
     )
 
