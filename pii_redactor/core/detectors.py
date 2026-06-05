@@ -13,6 +13,15 @@ class Detector(Protocol):
         ...
 
 
+class _EncodingChunk:
+    def __init__(self, ids, attention_mask, type_ids, offsets, word_ids) -> None:
+        self.ids = ids
+        self.attention_mask = attention_mask
+        self.type_ids = type_ids
+        self.offsets = offsets
+        self.word_ids = word_ids
+
+
 class BardsAiOnnxDetector:
     """Local ONNX Runtime backend for bardsai/eu-pii-anonimization-multilang."""
 
@@ -37,7 +46,7 @@ class BardsAiOnnxDetector:
             from tokenizers import Tokenizer
         except ImportError as exc:
             raise RuntimeError(
-                "PII redaction model dependencies are missing. Install the package with `pip install pii-redactor` "
+                "PII redaction model dependencies are missing. Install the package with `pip install any-lang-anonymizer` "
                 "or, from this repo, `python3 -m pip install -e .`."
             ) from exc
 
@@ -91,8 +100,48 @@ class BardsAiOnnxDetector:
         return _dedupe_and_merge(spans)
 
     def _chunked_encodings(self, text: str):
+        self._tokenizer.no_truncation()
         encoding = self._tokenizer.encode(text)
-        return [encoding, *encoding.overflowing]
+        self._tokenizer.enable_truncation(max_length=self.max_tokens, stride=self.stride)
+        if len(encoding.ids) <= self.max_tokens:
+            return [encoding]
+
+        prefix_count = 0
+        while prefix_count < len(encoding.ids) and encoding.word_ids[prefix_count] is None:
+            prefix_count += 1
+
+        suffix_count = 0
+        while (
+            suffix_count < len(encoding.ids) - prefix_count
+            and encoding.word_ids[len(encoding.ids) - suffix_count - 1] is None
+        ):
+            suffix_count += 1
+
+        body_start = prefix_count
+        body_end = len(encoding.ids) - suffix_count
+        body_capacity = self.max_tokens - prefix_count - suffix_count
+        step = body_capacity - self.stride
+        if body_capacity <= 0 or step <= 0:
+            raise ValueError("stride must leave room for non-special tokens")
+
+        chunks = []
+        start = body_start
+        while start < body_end:
+            end = min(start + body_capacity, body_end)
+            token_indexes = [*range(0, prefix_count), *range(start, end), *range(body_end, len(encoding.ids))]
+            chunks.append(
+                _EncodingChunk(
+                    ids=[encoding.ids[index] for index in token_indexes],
+                    attention_mask=[encoding.attention_mask[index] for index in token_indexes],
+                    type_ids=[encoding.type_ids[index] for index in token_indexes],
+                    offsets=[encoding.offsets[index] for index in token_indexes],
+                    word_ids=[encoding.word_ids[index] for index in token_indexes],
+                )
+            )
+            if end == body_end:
+                break
+            start += step
+        return chunks
 
     def _detect_encoding(self, encoding) -> list[Span]:
         np = self._np
