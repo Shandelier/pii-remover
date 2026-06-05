@@ -10,8 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from pii_redactor.core.detectors import build_detector
 from pii_redactor.core.redactor import Redactor
-from pii_redactor.llm import DemoLlmProvider, build_llm_provider
-from pii_redactor.store import JsonlStore
+from examples.support.llm import DemoLlmProvider, build_llm_provider
+from examples.support.store import JsonlStore
 
 
 DEMO_PROMPTS = [
@@ -26,7 +26,7 @@ async def run_demo() -> list[dict[str, str]]:
     if store_path.exists():
         store_path.unlink()
 
-    redactor = Redactor(detector=build_detector(os.getenv("PII_DETECTOR_BACKEND", "regex")))
+    redactor = Redactor(detector=build_detector(os.getenv("PII_DETECTOR_BACKEND", "local")))
     provider = build_llm_provider()
     store = JsonlStore(store_path)
     provider_name = "demo" if isinstance(provider, DemoLlmProvider) else "openrouter"

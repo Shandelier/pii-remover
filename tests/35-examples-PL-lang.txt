@@ -1,0 +1,174 @@
+ACCOUNT_IDENTIFIER:
+1. Mój identyfikator konta klienta to ACC-PL-839201.
+2. User ID w systemie: usr_7f92a1c0.
+3. Numer profilu pacjenta: PAT-004928-PL.
+
+AUTH_SECRET:
+1. Tymczasowe hasło brzmi: Zima!2026-Test.
+2. Token API: sk_test_51H8fakeTokenExample.
+3. Kod odzyskiwania konta: RCVR-8831-2209-FAKE.
+
+BANK_ACCOUNT_IDENTIFIER:
+1. Przelew wyślij na IBAN PL61109010140000071219812874.
+2. Numer rachunku: 12 3456 7890 1234 5678 9012 3456.
+3. Konto firmowe: DE89370400440532013000.
+
+BIOMETRIC_DATA:
+1. Odcisk palca użytkownika został zapisany jako fingerprint_template_83A9.
+2. Skan tęczówki oznaczono identyfikatorem iris_scan_PL_4471.
+3. Próbka głosu do weryfikacji: voiceprint_user_0192.
+
+CONTACT_HANDLE:
+1. Napisz do mnie na Telegramie: @jan_testowy.
+2. Mój Discord to kowal.fake#1842.
+3. Na GitHubie mam handle: @anna-demo-dev.
+
+CRIMINAL_OFFENCE_DATA:
+1. Jan Kowalski został skazany za kradzież w 2021 roku.
+2. W aktach widnieje zarzut oszustwa podatkowego.
+3. Osoba była zatrzymana w sprawie pobicia.
+
+DATE_OF_BIRTH:
+1. Data urodzenia: 14 marca 1987.
+2. Urodziłam się 1992-08-21.
+3. DOB: 05/11/1979.
+
+DEVICE_IDENTIFIER:
+1. Identyfikator urządzenia: device_9A3F-7782-BB10.
+2. Numer seryjny laptopa: C02FAKE7MD6M.
+3. Android ID: 3f2a91bc77d04e01.
+
+DOCUMENT_IDENTIFIER:
+1. Numer paszportu: AB1234567.
+2. Dowód osobisty: CDE123456.
+3. Prawo jazdy: WRO/445566/2026.
+
+DOCUMENT_REFERENCE:
+1. Sygnatura akt: I C 123/26.
+2. Numer sprawy: UODO-DS-440.12.2026.
+3. Numer umowy: NDA/PL/2026/04/118.
+
+EMAIL_ADDRESS:
+1. Kontakt: jan.kowalski@example.com.
+2. Wyślij na anna.nowak.test@example.org.
+3. Mój email roboczy: piotr.zielinski+demo@example.net.
+
+ETHNIC_ORIGIN:
+1. W formularzu podał pochodzenie romskie.
+2. Pacjentka zadeklarowała pochodzenie kaszubskie.
+3. W notatce zapisano: pochodzenie tatarskie.
+
+FINANCIAL_AMOUNT:
+1. Wynagrodzenie miesięczne wynosi 18 500 PLN.
+2. Na fakturze widnieje kwota 2 349,99 EUR.
+3. Limit kredytowy to 45 000 zł.
+
+GEO_LOCATION:
+1. Aktualne współrzędne: 51.1079, 17.0385.
+2. Ostatnia lokalizacja GPS: 52.2297 N, 21.0122 E.
+3. Pin mapy: 50.0647, 19.9450.
+
+HEALTH_DATA:
+1. Pacjent choruje na cukrzycę typu 1.
+2. W dokumentacji wpisano: przepuklina krążka międzykręgowego.
+3. Rozpoznanie: nadciśnienie tętnicze i astma.
+
+IDENTIFYING_LINK:
+1. Profil klienta: https://example.com/users/jan-kowalski-839201.
+2. Link do konta: https://crm.example.org/profile/anna-nowak-4421.
+3. Publiczny profil: https://social.example.net/@piotr-testowy.
+
+IP_ADDRESS:
+1. Ostatni login z IP 83.21.44.128.
+2. Serwer odnotował adres 192.168.0.42.
+3. Klient użył IPv6: 2001:db8:85a3::8a2e:370:7334.
+
+LOCATION:
+1. Mieszka we Wrocławiu.
+2. Spotkanie odbyło się w Berlinie.
+3. Pacjent pochodzi z Dolnego Śląska.
+
+ORGANIZATION_IDENTIFIER:
+1. NIP firmy: 8971867321.
+2. REGON: 021234567.
+3. KRS: 0000123456.
+
+ORGANIZATION_NAME:
+1. Pracuję w firmie Example Robotics Sp. z o.o.
+2. Fakturę wystawiła spółka Northwind Analytics GmbH.
+3. Klientem jest Fundacja Demo Europa.
+
+PAYMENT_CARD:
+1. Numer karty: 4111 1111 1111 1111.
+2. Karta płatnicza: 5555 5555 5555 4444.
+3. Numer Visa testowej: 4000 0000 0000 0002.
+
+PAYMENT_CARD_SECURITY:
+1. CVV: 123.
+2. Kod CVC to 987.
+3. Security code na karcie: 456.
+
+PERSON_ALIAS:
+1. W grze używa pseudonimu ShadowFox.
+2. Na forum występuje jako StaryWilk.
+3. Jej alias w projekcie to BlueLotus.
+
+PERSON_ATTRIBUTE:
+1. Ma 42 lata.
+2. Jest obywatelem Polski.
+3. Jest studentką trzeciego roku.
+
+PERSON_IDENTIFIER:
+1. PESEL: 85010112345.
+2. Numer ubezpieczenia: ZUS-PL-99218833.
+3. National ID: PL-ID-740921-8891.
+
+PERSON_NAME:
+1. Nazywam się Jan Kowalski.
+2. Osobą kontaktową jest Anna Nowak.
+3. Raport przygotował Piotr Zieliński.
+
+PERSON_ROLE_OR_TITLE:
+1. Stanowisko: dyrektor finansowy.
+2. Funkcja: inspektor ochrony danych.
+3. Tytuł zawodowy: radca prawny.
+
+PHONE_NUMBER:
+1. Telefon: +48 501 222 333.
+2. Numer kontaktowy: 601-987-654.
+3. Mobile: +49 151 23456789.
+
+POLITICAL_OPINION:
+1. W ankiecie napisał, że popiera Partię Zielonych.
+2. Zadeklarowała poglądy konserwatywne.
+3. W notatce wpisano: przeciwnik obecnego rządu.
+
+POSTAL_ADDRESS:
+1. Adres: ul. Testowa 12/4, 50-001 Wrocław.
+2. Mieszka przy 10 Downing Street, SW1A 2AA London.
+3. Korespondencję wysłać na Hauptstrasse 5, 10115 Berlin.
+
+PROPER_NAME:
+1. Projekt nosi nazwę Aurora Bridge.
+2. W raporcie wspomniano system Atlas Monitor.
+3. Kampania nazywa się Silver River.
+
+RELIGION_OR_BELIEF:
+1. W formularzu podał wyznanie katolickie.
+2. Zadeklarowała, że jest buddystką.
+3. W danych zapisano: osoba niewierząca.
+
+SEXUAL_ORIENTATION:
+1. W ankiecie zadeklarował orientację homoseksualną.
+2. Osoba podała, że jest biseksualna.
+3. W notatce zapisano: orientacja heteroseksualna.
+
+TRADE_UNION_MEMBERSHIP:
+1. Należy do związku zawodowego Solidarność.
+2. Jest członkinią Ogólnopolskiego Związku Zawodowego Pracowników Medycznych.
+3. W HR zapisano: członek związku zawodowego nauczycieli.
+
+VEHICLE_IDENTIFIER:
+1. Numer rejestracyjny: DW 8FAKE.
+2. VIN pojazdu: WBAFAKE1234567890.
+3. Tablica auta służbowego: KR 1234X.

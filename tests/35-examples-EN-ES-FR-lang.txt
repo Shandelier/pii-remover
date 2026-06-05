@@ -1,0 +1,174 @@
+ACCOUNT_IDENTIFIER:
+1. My customer account ID is ACC-US-839201.
+2. Mi identificador de cuenta es ACC-ES-492817.
+3. Mon identifiant de compte client est ACC-FR-774201.
+
+AUTH_SECRET:
+1. The temporary password is Winter!2026-Test.
+2. El token de API es sk_test_51H8fakeTokenExample.
+3. Le code de récupération est RCVR-8831-2209-FAKE.
+
+BANK_ACCOUNT_IDENTIFIER:
+1. Please send the transfer to IBAN GB82WEST12345698765432.
+2. Envía el pago al IBAN ES9121000418450200051332.
+3. Le numéro de compte est FR7630006000011234567890189.
+
+BIOMETRIC_DATA:
+1. The user’s fingerprint template was saved as fingerprint_template_83A9.
+2. La muestra de voz fue registrada como voiceprint_user_0192.
+3. Le scan de l’iris est identifié comme iris_scan_FR_4471.
+
+CONTACT_HANDLE:
+1. Message me on Telegram at @john_test_user.
+2. Mi usuario de Discord es carlos.fake#1842.
+3. Mon pseudo GitHub est @marie-demo-dev.
+
+CRIMINAL_OFFENCE_DATA:
+1. John Miller was convicted of theft in 2021.
+2. En el expediente aparece una acusación de fraude fiscal.
+3. La personne a été arrêtée dans une affaire d’agression.
+
+DATE_OF_BIRTH:
+1. Date of birth: March 14, 1987.
+2. Nací el 21 de agosto de 1992.
+3. Date de naissance : 05/11/1979.
+
+DEVICE_IDENTIFIER:
+1. The device identifier is device_9A3F-7782-BB10.
+2. El número de serie del portátil es C02FAKE7MD6M.
+3. L’identifiant Android est 3f2a91bc77d04e01.
+
+DOCUMENT_IDENTIFIER:
+1. Passport number: AB1234567.
+2. DNI: 12345678Z.
+3. Numéro de carte d’identité : CDE123456.
+
+DOCUMENT_REFERENCE:
+1. Case reference: CIV-2026-04-118.
+2. Número de expediente: AEPD-DS-440.12.2026.
+3. Référence du contrat : NDA/FR/2026/04/118.
+
+EMAIL_ADDRESS:
+1. Contact me at john.miller@example.com.
+2. Envíalo a ana.garcia.test@example.org.
+3. Mon adresse professionnelle est pierre.martin.demo@example.net.
+
+ETHNIC_ORIGIN:
+1. The form states that the person is of Romani origin.
+2. La paciente declaró origen vasco.
+3. Le dossier indique une origine berbère.
+
+FINANCIAL_AMOUNT:
+1. The monthly salary is 18,500 USD.
+2. La factura muestra un importe de 2.349,99 EUR.
+3. La limite de crédit est de 45 000 €.
+
+GEO_LOCATION:
+1. Current coordinates: 51.5074, -0.1278.
+2. Última ubicación GPS: 40.4168 N, 3.7038 W.
+3. Position GPS : 48.8566, 2.3522.
+
+HEALTH_DATA:
+1. The patient has type 1 diabetes.
+2. En la documentación figura una hernia discal.
+3. Diagnostic : hypertension artérielle et asthme.
+
+IDENTIFYING_LINK:
+1. Customer profile: https://example.com/users/john-miller-839201.
+2. Enlace a la cuenta: https://crm.example.org/profile/ana-garcia-4421.
+3. Profil public : https://social.example.net/@pierre-test.
+
+IP_ADDRESS:
+1. The last login came from IP address 83.21.44.128.
+2. El servidor registró la dirección 192.168.0.42.
+3. Le client a utilisé l’adresse IPv6 2001:db8:85a3::8a2e:370:7334.
+
+LOCATION:
+1. He lives in London.
+2. La reunión tuvo lugar en Madrid.
+3. La patiente vient de Lyon.
+
+ORGANIZATION_IDENTIFIER:
+1. Company tax ID: US-EIN-12-3456789.
+2. CIF de la empresa: B12345678.
+3. Numéro SIREN : 123456789.
+
+ORGANIZATION_NAME:
+1. I work at Example Robotics Ltd.
+2. La factura fue emitida por Northwind Analytics S.L.
+3. Le client est Fondation Démo Europe.
+
+PAYMENT_CARD:
+1. Card number: 4111 1111 1111 1111.
+2. Tarjeta de pago: 5555 5555 5555 4444.
+3. Numéro de carte Visa de test : 4000 0000 0000 0002.
+
+PAYMENT_CARD_SECURITY:
+1. CVV: 123.
+2. El código CVC es 987.
+3. Le code de sécurité de la carte est 456.
+
+PERSON_ALIAS:
+1. In the game, he uses the nickname ShadowFox.
+2. En el foro aparece como LoboViejo.
+3. Son alias dans le projet est BlueLotus.
+
+PERSON_ATTRIBUTE:
+1. He is 42 years old.
+2. Ella es ciudadana española.
+3. Elle est étudiante en troisième année.
+
+PERSON_IDENTIFIER:
+1. National insurance number: QQ123456C.
+2. Número nacional de identidad: 12345678Z.
+3. Numéro de sécurité sociale : 1 84 12 75 123 456.
+
+PERSON_NAME:
+1. My name is John Miller.
+2. La persona de contacto es Ana García.
+3. Le rapport a été préparé par Pierre Martin.
+
+PERSON_ROLE_OR_TITLE:
+1. Job title: chief financial officer.
+2. Cargo: delegado de protección de datos.
+3. Titre professionnel : avocat.
+
+PHONE_NUMBER:
+1. Phone: +44 7700 900123.
+2. Número de contacto: +34 612 345 678.
+3. Téléphone : +33 6 12 34 56 78.
+
+POLITICAL_OPINION:
+1. In the survey, he wrote that he supports the Green Party.
+2. Declaró tener opiniones conservadoras.
+3. La note indique : opposant au gouvernement actuel.
+
+POSTAL_ADDRESS:
+1. Address: 221B Baker Street, London NW1 6XE.
+2. Vive en Calle Mayor 12, 28013 Madrid.
+3. Envoyez le courrier au 10 Rue de Rivoli, 75001 Paris.
+
+PROPER_NAME:
+1. The project is called Aurora Bridge.
+2. En el informe se menciona el sistema Atlas Monitor.
+3. La campagne s’appelle Silver River.
+
+RELIGION_OR_BELIEF:
+1. The form states that he is Catholic.
+2. Ella declaró que es budista.
+3. Le dossier indique : personne athée.
+
+SEXUAL_ORIENTATION:
+1. In the survey, he stated that he is gay.
+2. La persona indicó que es bisexual.
+3. La note indique : orientation hétérosexuelle.
+
+TRADE_UNION_MEMBERSHIP:
+1. He is a member of the National Teachers Union.
+2. Ella pertenece al sindicato Comisiones Obreras.
+3. Le service RH indique : membre d’un syndicat d’enseignants.
+
+VEHICLE_IDENTIFIER:
+1. License plate: AB12 CDE.
+2. VIN del vehículo: WBAFAKE1234567890.
+3. Plaque d’immatriculation : AB-123-CD.

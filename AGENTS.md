@@ -4,8 +4,20 @@
 - Current MVP goal: make a working self-hosted PII redaction step for Langfuse-style LLM observability logs, not a hosted storage product.
 - Architecture preference: raw PII may go to the user's own LLM provider path, but observability/storage must only receive redacted prompt/response.
 - Prototype should run without external keys; optional OpenRouter is useful, but local deterministic demo fallback is required.
+- Preferred real LLM demo provider is Groq `llama-3.1-8b-instant` via `GROQ_API_KEY`; OpenRouter remains optional fallback.
 - Gotcha from demo: LLM responses can reintroduce or inflect PII (for example "Pani Anno"), so always redact both prompt and response immediately before storage.
 - For Langfuse examples, keep a dry-run path so the demo works without a self-hosted Langfuse instance or credentials.
 - Product direction update: prioritize drop-in Langfuse `mask=make_mask()` integration over server/gateway demos; the server remains secondary.
 - HTML playground is intentionally served by FastAPI at `/` and `/playground` so it uses the same `/redact` backend as the prototype.
 - Local Bards AI backend should stay pure ONNX Runtime + Hugging Face Hub + tokenizers; avoid `optimum`, `torch`, and `torchvision` in runtime.
+- Playground left-side highlighting uses `/detect` and contenteditable markup; tooltips show `label score`, while `/redact` remains the source of redacted output.
+- Avoid native `title` tooltips in the playground; use the custom immediate tooltip so hover feedback has no browser delay.
+- Default product path must require Bards AI (`local`/`bardsai`) only; no regex fallback or regex-only debug path in the library.
+- Bards tokenizer must use truncation overflow with stride for long text; plain 512-token truncation causes detection to stop mid-document.
+- `examples/langfuse_live_demo.py` loads `.env` and sends real masked generation events to Langfuse; stdout must not print secrets or raw PII.
+- Redactor defaults to recursive JSON-like walk over every string; use `include_paths`/`exclude_paths` only to tune fields, with `exclude_paths` taking precedence.
+- `examples/langfuse_txt_demo.py` is the more realistic long-payload demo: OpenRouter rewrite task, then masked Langfuse tracing plus local known-value leakage report.
+- `examples/langfuse_txt_demo.py` skips Langfuse send by default when local known-value verification finds raw values after masking; `--allow-leaks` overrides only for private manual tests.
+- For Groq TXT demo, prefer one full request per file with `LLM_MAX_TOKENS=3500`; `9000` caused Groq 413 even though the prompt itself was small.
+- Packaging direction: `pii_redactor/` is core pip library only; FastAPI playground lives in `playground/`, and LLM/store demo helpers live under `examples/support/`.
+- Project license is Apache-2.0 to match the Bards AI Hugging Face model; the model is downloaded/cached at runtime, not vendored.

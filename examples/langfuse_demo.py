@@ -10,8 +10,8 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from examples.demo import DEMO_PROMPTS
+from examples.support.llm import GroqProvider, OpenRouterProvider, build_llm_provider
 from pii_redactor.integrations.langfuse import make_mask
-from pii_redactor.llm import DemoLlmProvider, build_llm_provider
 
 
 def _has_langfuse_config() -> bool:
@@ -20,7 +20,7 @@ def _has_langfuse_config() -> bool:
 
 async def _build_events() -> list[dict[str, Any]]:
     provider = build_llm_provider()
-    provider_name = "demo" if isinstance(provider, DemoLlmProvider) else "openrouter"
+    provider_name = provider.model if isinstance(provider, (GroqProvider, OpenRouterProvider)) else "demo"
 
     events = []
     for index, prompt in enumerate(DEMO_PROMPTS, start=1):
@@ -28,7 +28,7 @@ async def _build_events() -> list[dict[str, Any]]:
         events.append(
             {
                 "name": f"pii-redactor-demo-{index}",
-                "model": os.getenv("OPENROUTER_MODEL", provider_name),
+                "model": provider_name,
                 "input": prompt,
                 "output": response,
                 "metadata": {

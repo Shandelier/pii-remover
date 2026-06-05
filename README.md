@@ -2,19 +2,9 @@
 
 Drop-in PII redaction for teams that already use Langfuse.
 
-The main path is client-side Langfuse masking: data is redacted in the user's app before Langfuse receives traced `input`, `output`, and `metadata`.
-
-## Add To Existing Langfuse Code
-
-Before:
-
-```python
-from langfuse import Langfuse
-
-langfuse = Langfuse()
+```bash
+pip install pii-redactor
 ```
-
-After:
 
 ```python
 from langfuse import Langfuse
@@ -23,91 +13,70 @@ from pii_redactor.integrations.langfuse import make_mask
 langfuse = Langfuse(mask=make_mask())
 ```
 
-For the Bards AI local model backend:
+That is the main API. `make_mask()` recursively scans every string Langfuse sends through the mask callback, including nested `input`, `output`, `metadata`, `messages`, tool calls, and custom fields.
+
+## How It Works
+
+`pii-redactor` runs the Bards AI ONNX PII model locally. Raw observability data is redacted in your app before it is sent to Langfuse.
+
+The model is downloaded from Hugging Face on first use and cached locally by `huggingface-hub`.
+
+Optional model config:
 
 ```bash
-python3 -m pip install -e '.[local]'
+export PII_MODEL_ID=bardsai/eu-pii-anonimization-multilang
+export PII_MODEL_CACHE_DIR=/path/to/model-cache
 ```
+
+You can narrow or exclude JSON paths if needed:
 
 ```python
-langfuse = Langfuse(mask=make_mask(backend="local"))
+langfuse = Langfuse(
+    mask=make_mask(
+        include_paths=["input", "output", "metadata", "messages.*.content", "tool_calls.*.args"],
+        exclude_paths=["metadata.trace_id", "metadata.model", "usage"],
+    )
+)
 ```
 
-The default prototype backend is regex-based so the examples run immediately. `backend="local"` is wired for `bardsai/eu-pii-anonimization-multilang`.
-The local backend uses ONNX Runtime directly, with regex checks layered in for structured values like emails, cards, PESEL, and phone numbers.
+By default, no path config is needed. Everything text-like is scanned.
 
-## Langfuse Demo
+## Model
 
-Dry-run Langfuse-shaped generation events without sending anything:
+The default model is [`bardsai/eu-pii-anonimization-multilang`](https://huggingface.co/bardsai/eu-pii-anonimization-multilang). The project is Apache-2.0 licensed, matching the model license. The model files are not bundled in this package.
+
+## Local Playground
+
+The FastAPI playground is a demo tool, not part of the core library.
 
 ```bash
-PII_LLM_PROVIDER=demo python3 examples/langfuse_demo.py
+python3 -m pip install -e '.[server]'
+python3 -m uvicorn playground.app:app --reload
 ```
 
-Send masked events to Langfuse:
-
-```bash
-python3 -m pip install -e '.[langfuse]'
-export LANGFUSE_PUBLIC_KEY=pk-lf-...
-export LANGFUSE_SECRET_KEY=sk-lf-...
-export LANGFUSE_BASE_URL=http://localhost:3000
-PII_LLM_PROVIDER=demo python3 examples/langfuse_demo.py
-```
-
-The demo uses three PII-heavy prompts and masks the traced prompt, LLM response, and metadata before Langfuse export.
-
-## Minimal Existing-App Example
-
-See [examples/langfuse_existing_app.py](examples/langfuse_existing_app.py).
-
-The whole integration is intentionally just the Langfuse `mask` callback. Langfuse documents that this callback is applied to observation `input`, `output`, and `metadata` before export: [Langfuse masking docs](https://langfuse.com/docs/observability/features/masking).
-
-## Optional Server Prototype
-
-The FastAPI server is a secondary path for teams that want a standalone gateway.
-
-```bash
-python3 -m pip install -e .
-python3 -m uvicorn pii_redactor.server.app:app --reload
-```
-
-Open the local playground:
+Open:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-By default this uses the lightweight `regex` fallback so the prototype starts instantly. The page shows which detector is active.
+## Examples
 
-Use the Bards AI detector in the playground:
-
-```bash
-python3 -m pip install -e '.[local]'
-PII_DETECTOR_BACKEND=local python3 -m uvicorn pii_redactor.server.app:app --reload
-```
+Runnable demos live in `examples/`.
 
 ```bash
-curl -X POST http://127.0.0.1:8000/chat \
-  -H 'Content-Type: application/json' \
-  -d '{"prompt":"Jan Kowalski, email jan.kowalski@example.com, PESEL 85010112345. Odpowiedz krótko."}'
+python3 -m pip install -e '.[demo]'
+PII_LLM_PROVIDER=demo python3 examples/langfuse_demo.py
 ```
 
-Stored traces are written only after redaction:
+For real LLM demo traces:
 
 ```bash
-curl http://127.0.0.1:8000/traces
+export LANGFUSE_PUBLIC_KEY=pk-lf-...
+export LANGFUSE_SECRET_KEY=sk-lf-...
+export LANGFUSE_BASE_URL=https://cloud.langfuse.com
+export GROQ_API_KEY=gsk_...
+python3 examples/langfuse_txt_demo.py --allow-leaks
 ```
 
-## Local Demo Store
-
-```bash
-PII_LLM_PROVIDER=demo python3 examples/demo.py
-```
-
-This writes redacted traces to:
-
-```text
-data/demo_redacted_logs.jsonl
-```
-
-If `OPENROUTER_API_KEY` is set, demos use OpenRouter. Force local demo mode with `PII_LLM_PROVIDER=demo`.
+The long TXT demo uses Groq `llama-3.1-8b-instant` by default when `GROQ_API_KEY` is set. It asks the LLM to append ` | checked` to each non-empty line, then verifies locally whether known raw values remain after masking.
