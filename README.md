@@ -1,9 +1,9 @@
-# pii-redactor
+# any-lang-anonymizer
 
 Drop-in PII redaction for teams that already use Langfuse.
 
 ```bash
-pip install langfuse-pii-redactor
+pip install any-lang-anonymizer
 ```
 
 ```python
@@ -17,7 +17,7 @@ That is the main API. `make_mask()` recursively scans every string Langfuse send
 
 ## How It Works
 
-`pii-redactor` runs the Bards AI ONNX PII model locally. Raw observability data is redacted in your app before it is sent to Langfuse.
+`any-lang-anonymizer` runs the Bards AI ONNX PII model locally. Raw observability data is redacted in your app before it is sent to Langfuse.
 
 The model is downloaded from Hugging Face on first use and cached locally by `huggingface-hub`.
 
