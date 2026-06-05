@@ -3,7 +3,7 @@
 Drop-in PII redaction for teams that already use Langfuse.
 
 ```bash
-pip install pii-redactor
+pip install langfuse-pii-redactor
 ```
 
 ```python

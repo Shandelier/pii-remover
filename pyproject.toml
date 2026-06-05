@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pii-redactor"
+name = "langfuse-pii-redactor"
 version = "0.1.0"
 description = "Self-hosted PII redaction step for LLM observability pipelines."
 readme = "README.md"
