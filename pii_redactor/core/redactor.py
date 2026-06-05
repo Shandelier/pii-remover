@@ -7,6 +7,9 @@ from typing import Any
 from pii_redactor.core.detectors import Detector, build_detector
 from pii_redactor.core.types import Span
 
+PathPattern = tuple[str, ...]
+DataPath = tuple[str, ...]
+
 
 class Redactor:
     def __init__(
@@ -16,6 +19,8 @@ class Redactor:
         max_depth: int = 20,
         include_labels: set[str] | None = None,
         exclude_labels: set[str] | None = None,
+        include_paths: list[str] | None = None,
+        exclude_paths: list[str] | None = None,
         expand_to_word_boundaries: bool = True,
     ) -> None:
         self.detector = detector or build_detector()
@@ -23,14 +28,19 @@ class Redactor:
         self.max_depth = max_depth
         self.include_labels = include_labels
         self.exclude_labels = exclude_labels or set()
+        self.include_paths = _compile_path_patterns(include_paths)
+        self.exclude_paths = _compile_path_patterns(exclude_paths)
         self.expand_to_word_boundaries = expand_to_word_boundaries
 
     def detect(self, text: str) -> list[Span]:
         spans = self.detector.detect(text)
         return [span for span in spans if self._should_redact(span)]
 
+    def spans_for_text(self, text: str) -> list[Span]:
+        return self._prepare_spans(text, self.detect(text))
+
     def redact_text(self, text: str) -> str:
-        spans = self._prepare_spans(text, self.detect(text))
+        spans = self.spans_for_text(text)
         if not spans:
             return text
 
@@ -64,18 +74,32 @@ class Redactor:
             end += 1
         return Span(start, end, span.label, span.score)
 
-    def redact(self, data: Any, depth: int = 0) -> Any:
+    def redact(self, data: Any, depth: int = 0, path: DataPath = ()) -> Any:
         if depth > self.max_depth:
             return self.replacement
+        if self._is_excluded_path(path):
+            return data
         if isinstance(data, str):
+            if not self._is_included_path(path):
+                return data
             return self.redact_text(data)
         if isinstance(data, Mapping):
-            return {key: self.redact(value, depth + 1) for key, value in data.items()}
+            return {key: self.redact(value, depth + 1, (*path, str(key))) for key, value in data.items()}
         if isinstance(data, tuple):
-            return tuple(self.redact(value, depth + 1) for value in data)
+            return tuple(self.redact(value, depth + 1, (*path, str(index))) for index, value in enumerate(data))
         if isinstance(data, Sequence) and not isinstance(data, (bytes, bytearray)):
-            return [self.redact(value, depth + 1) for value in data]
+            return [self.redact(value, depth + 1, (*path, str(index))) for index, value in enumerate(data)]
         return data
+
+    def _is_included_path(self, path: DataPath) -> bool:
+        if self.include_paths is None:
+            return True
+        return any(_path_matches(pattern, path) for pattern in self.include_paths)
+
+    def _is_excluded_path(self, path: DataPath) -> bool:
+        if self.exclude_paths is None:
+            return False
+        return any(_path_matches(pattern, path) for pattern in self.exclude_paths)
 
 
 def _is_word_char(character: str) -> bool:
@@ -91,3 +115,17 @@ def _merge_spans(spans: list[Span]) -> list[Span]:
         previous = merged[-1]
         merged[-1] = Span(previous.start, max(previous.end, span.end), previous.label, min(previous.score, span.score))
     return merged
+
+
+def _compile_path_patterns(paths: list[str] | None) -> list[PathPattern] | None:
+    if paths is None:
+        return None
+    return [tuple(part for part in path.split(".") if part) for path in paths if path.strip()]
+
+
+def _path_matches(pattern: PathPattern, path: DataPath) -> bool:
+    if not pattern:
+        return not path
+    if len(pattern) > len(path):
+        return False
+    return all(expected == "*" or expected == actual for expected, actual in zip(pattern, path, strict=False))
