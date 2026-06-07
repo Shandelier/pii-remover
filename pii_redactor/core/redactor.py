@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from dataclasses import asdict, is_dataclass
 import re
 from typing import Any
 
@@ -89,6 +90,9 @@ class Redactor:
             return tuple(self.redact(value, depth + 1, (*path, str(index))) for index, value in enumerate(data))
         if isinstance(data, Sequence) and not isinstance(data, (bytes, bytearray)):
             return [self.redact(value, depth + 1, (*path, str(index))) for index, value in enumerate(data)]
+        serializable = _to_serializable(data)
+        if serializable is not data:
+            return self.redact(serializable, depth + 1, path)
         return data
 
     def _is_included_path(self, path: DataPath) -> bool:
@@ -129,3 +133,24 @@ def _path_matches(pattern: PathPattern, path: DataPath) -> bool:
     if len(pattern) > len(path):
         return False
     return all(expected == "*" or expected == actual for expected, actual in zip(pattern, path, strict=False))
+
+
+def _to_serializable(data: Any) -> Any:
+    if is_dataclass(data) and not isinstance(data, type):
+        return asdict(data)
+
+    model_dump = getattr(data, "model_dump", None)
+    if callable(model_dump):
+        try:
+            return model_dump(mode="json")
+        except TypeError:
+            return model_dump()
+
+    dict_method = getattr(data, "dict", None)
+    if callable(dict_method):
+        try:
+            return dict_method()
+        except TypeError:
+            return data
+
+    return data

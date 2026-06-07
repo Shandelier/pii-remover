@@ -26,6 +26,13 @@ test = [
 langfuse = [
   "langfuse>=3.0.0",
 ]
+langchain = [
+  "langchain>=1.0.0",
+  "langchain-groq>=1.0.0",
+  "langchain-openai>=1.0.0",
+  "langfuse>=3.0.0",
+  "langgraph>=1.0.0",
+]
 server = [
   "fastapi>=0.115.0",
   "pydantic>=2.8.0",

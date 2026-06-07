@@ -21,3 +21,5 @@
 - For Groq TXT demo, prefer one full request per file with `LLM_MAX_TOKENS=3500`; `9000` caused Groq 413 even though the prompt itself was small.
 - Packaging direction: `pii_redactor/` is core pip library only; FastAPI playground lives in `playground/`, and LLM/store demo helpers live under `examples/support/`.
 - Project license is Apache-2.0 to match the Bards AI Hugging Face model; the model is downloaded/cached at runtime, not vendored.
+- LangChain/LangGraph support should stay optional. Preferred UX: `make_langfuse_callback()` plus normal LangChain `config={"callbacks": [...]}`; do not add LangChain to core dependencies.
+- LangChain/LangGraph sends BaseMessage/Pydantic objects and propagates metadata before normal serialization; the redactor must handle `model_dump()` objects and the LangChain callback should pre-mask chain metadata/input/output.

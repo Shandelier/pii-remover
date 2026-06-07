@@ -156,6 +156,22 @@ def test_redacts_nested_observability_payload_by_default() -> None:
     assert result["usage"]["total_tokens"] == 123
 
 
+def test_redacts_pydantic_style_message_objects() -> None:
+    class Message:
+        def __init__(self, content: str) -> None:
+            self.content = content
+
+        def model_dump(self, mode: str = "python") -> dict[str, str]:
+            return {"type": "human", "content": self.content, "mode": mode}
+
+    redactor = Redactor(detector=PatternDetector({"jan.kowalski@example.com": "EMAIL"}))
+
+    result = redactor.redact({"messages": [Message("Email jan.kowalski@example.com")]})
+
+    assert result["messages"][0]["content"] == "Email [REDACTED]"
+    assert result["messages"][0]["mode"] == "json"
+
+
 def test_include_paths_limits_which_fields_are_scanned() -> None:
     redactor = Redactor(
         detector=PatternDetector(

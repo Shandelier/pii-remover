@@ -41,6 +41,29 @@ langfuse = Langfuse(
 
 By default, no path config is needed. Everything text-like is scanned.
 
+## LangChain / LangGraph
+
+Langfuse traces LangChain and LangGraph through a callback handler. Use the same callback, but create the Langfuse client with the anonymizer mask first.
+
+```bash
+pip install 'any-lang-anonymizer[langchain]'
+```
+
+```python
+from langchain.agents import create_agent
+from pii_redactor.integrations.langchain import make_langfuse_callback
+
+langfuse_handler = make_langfuse_callback()
+agent = create_agent(model="groq:llama-3.1-8b-instant", tools=[])
+
+agent.invoke(
+    {"messages": [{"role": "user", "content": "Jan Kowalski, jan.kowalski@example.com"}]},
+    config={"callbacks": [langfuse_handler]},
+)
+```
+
+`create_agent` runs on LangGraph internally, so this is the shortest LangGraph-backed agent path. A runnable example is in `examples/langchain_langgraph_langfuse.py`.
+
 ## Model
 
 The default model is [`bardsai/eu-pii-anonimization-multilang`](https://huggingface.co/bardsai/eu-pii-anonimization-multilang). The project is Apache-2.0 licensed, matching the model license. The model files are not bundled in this package.
