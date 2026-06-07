@@ -15,6 +15,15 @@ langfuse = Langfuse(mask=make_mask())
 
 That is the main API. `make_mask()` recursively scans every string Langfuse sends through the mask callback, including nested `input`, `output`, `metadata`, `messages`, tool calls, and custom fields.
 
+## Supported Integrations
+
+| Framework | Status | How to use |
+| --- | --- | --- |
+| Langfuse SDK | Ready | `Langfuse(mask=make_mask())` |
+| LangChain / LangGraph | Ready | `make_langfuse_callback()` with `config={"callbacks": [...]}` |
+| Pydantic AI | Coming soon | Planned example |
+| OpenAI SDK | Coming soon | Planned example |
+
 ## How It Works
 
 `any-lang-anonymizer` runs the Bards AI ONNX PII model locally. Raw observability data is redacted in your app before it is sent to Langfuse.
