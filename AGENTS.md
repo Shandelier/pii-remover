@@ -23,3 +23,4 @@
 - Project license is Apache-2.0 to match the Bards AI Hugging Face model; the model is downloaded/cached at runtime, not vendored.
 - LangChain/LangGraph support should stay optional. Preferred UX: `make_langfuse_callback()` plus normal LangChain `config={"callbacks": [...]}`; do not add LangChain to core dependencies.
 - LangChain/LangGraph sends BaseMessage/Pydantic objects and propagates metadata before normal serialization; the redactor must handle `model_dump()` objects and the LangChain callback should pre-mask chain metadata/input/output.
+- Span expansion should cover the whole non-whitespace token and then trim boundary punctuation, so partial model hits inside emails/domains do not leave suffixes like `.com` visible.

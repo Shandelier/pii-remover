@@ -113,6 +113,54 @@ def test_spans_for_text_returns_expanded_spans() -> None:
     assert result == [Span(8, 24, "ORGANIZATION_NAME")]
 
 
+def test_expands_partial_email_span_to_full_attached_token() -> None:
+    text = "Email jan.kowalski@example.com. Drugi: admin@test.pl!"
+    redactor = Redactor(
+        detector=StaticDetector(
+            [
+                Span(text.index("jan.kowalski"), text.index("example") + len("example"), "EMAIL"),
+                Span(text.index("admin"), text.index("test") + len("test"), "EMAIL"),
+            ]
+        )
+    )
+
+    result = redactor.redact_text(text)
+
+    assert result == "Email [REDACTED]. Drugi: [REDACTED]!"
+
+
+def test_expands_partial_domain_span_to_full_attached_token() -> None:
+    text = "Wejdź na sub.example.co.uk, potem na api.service.pl/path."
+    redactor = Redactor(
+        detector=StaticDetector(
+            [
+                Span(text.index("example"), text.index("co") + len("co"), "URL"),
+                Span(text.index("service"), text.index("pl") + len("pl"), "URL"),
+            ]
+        )
+    )
+
+    result = redactor.redact_text(text)
+
+    assert result == "Wejdź na [REDACTED], potem na [REDACTED]."
+
+
+def test_keeps_boundary_punctuation_outside_expanded_mask() -> None:
+    text = 'Kontakt: "jan@example.com", potem (Anna Nowak)!'
+    redactor = Redactor(
+        detector=StaticDetector(
+            [
+                Span(text.index("jan"), text.index("example") + len("example"), "EMAIL"),
+                Span(text.index("Anna"), text.index("Nowak") + len("Nowak"), "PERSON_NAME"),
+            ]
+        )
+    )
+
+    result = redactor.redact_text(text)
+
+    assert result == 'Kontakt: "[REDACTED]", potem ([REDACTED])!'
+
+
 def test_can_exclude_entity_labels_from_redaction() -> None:
     redactor = Redactor(
         detector=StaticDetector(

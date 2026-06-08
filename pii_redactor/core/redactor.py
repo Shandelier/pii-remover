@@ -69,10 +69,15 @@ class Redactor:
     def _expand_span_to_word_boundaries(self, text: str, span: Span) -> Span:
         start = max(0, min(span.start, len(text)))
         end = max(start, min(span.end, len(text)))
-        while start > 0 and _is_word_char(text[start - 1]):
+        while start > 0 and not text[start - 1].isspace():
             start -= 1
-        while end < len(text) and _is_word_char(text[end]):
+        while end < len(text) and not text[end].isspace():
             end += 1
+
+        while start < end and _is_boundary_punctuation(text[start]):
+            start += 1
+        while end > start and _is_boundary_punctuation(text[end - 1]):
+            end -= 1
         return Span(start, end, span.label, span.score)
 
     def redact(self, data: Any, depth: int = 0, path: DataPath = ()) -> Any:
@@ -106,8 +111,8 @@ class Redactor:
         return any(_path_matches(pattern, path) for pattern in self.exclude_paths)
 
 
-def _is_word_char(character: str) -> bool:
-    return re.match(r"[\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ-]", character, flags=re.UNICODE) is not None
+def _is_boundary_punctuation(character: str) -> bool:
+    return re.match(r"[.,;:!?\"'()\[\]{}]", character, flags=re.UNICODE) is not None
 
 
 def _merge_spans(spans: list[Span]) -> list[Span]:
