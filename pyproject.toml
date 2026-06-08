@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "any-lang-anonymizer"
-version = "2026.6.7"
+version = "2026.6.8"
 description = "Self-hosted PII redaction step for LLM observability pipelines."
 readme = "README.md"
 license = "Apache-2.0"
